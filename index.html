@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hanzyy Produk & Game Center</title>
+  <title>Hanzyy Game & Produk</title>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
   <style>
@@ -19,155 +19,220 @@
       color: var(--text);
       transition: 0.4s;
     }
-    .container {
-      padding: 2rem;
-    }
-    h1 {
-      text-align: center;
-      color: var(--primary);
-      text-shadow: 0 0 10px var(--primary);
-    }
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .product {
-      background: #1f1f1f;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 0 15px #00ffd580;
-      text-align: center;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-    .product:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00ffd5cc;
-    }
-    .game-section {
-      margin-top: 3rem;
-    }
-    .game {
+    .container { padding: 2rem; max-width: 800px; margin: auto; }
+    h1, h2 { text-align: center; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    .game, .login-box {
       background: #121212;
       border: 1px solid #00ffd5;
       border-radius: 10px;
       padding: 1rem;
-      margin-bottom: 1rem;
+      margin: 1rem 0;
       text-align: center;
       box-shadow: 0 0 10px #00ffd5aa;
     }
-    button {
-      padding: 10px 16px;
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      justify-content: center;
+      gap: 10px;
       margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: var(--primary);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
     }
-    button:hover {
-      transform: scale(1.05);
-      background: #00fff2;
+    .card {
+      width: 60px; height: 60px;
+      background: #222; color: transparent;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 24px;
+      border-radius: 8px; cursor: pointer;
     }
+    .card.open {
+      background: var(--primary); color: black;
+    }
+    button {
+      padding: 10px 16px; margin: 6px 4px;
+      border: none; border-radius: 8px;
+      background: var(--primary); color: black;
+      font-weight: bold; cursor: pointer;
+    }
+    input { padding: 8px; width: 80%; border-radius: 6px; margin-top: 5px; }
+    .leaderboard-box { margin-top: 2rem; background: #1a1a1a; padding: 1rem; border-radius: 10px; }
+    .leaderboard-box li { margin: 5px 0; list-style: none; }
     .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--primary);
-      color: black;
-      border-radius: 8px;
-      padding: 8px 12px;
-      cursor: pointer;
-      box-shadow: 0 0 12px var(--primary);
+      position: fixed; top: 15px; right: 15px;
+      background: var(--primary); color: black;
+      padding: 8px 12px; border-radius: 8px; cursor: pointer;
     }
-
-    /* Dark/Light Theme */
-    body.light {
-      --bg: #ffffff;
-      --text: #000000;
-      --primary: #0f62ff;
-    }
+    .hide { display: none; }
   </style>
 </head>
 <body>
   <div class="theme-toggle" onclick="toggleTheme()">🎨 Theme</div>
+  <audio id="bgMusic" src="https://files.catbox.moe/m8tt9h.mp3" autoplay loop></audio>
+
   <div class="container">
-    <h1 data-aos="zoom-in">🎮 Hanzyy Produk & Game Center</h1>
+    <h1 data-aos="zoom-in">🎮 Hanzyy Game Center</h1>
 
-    <section class="product-grid" data-aos="fade-up">
-      <div class="product" onclick="playSound()">🛍️ Script WhatsApp</div>
-      <div class="product" onclick="playSound()">🛍️ Telegram Bot</div>
-      <div class="product" onclick="playSound()">🛍️ Web Panel</div>
-      <div class="product" onclick="playSound()">🛍️ Auto Reply</div>
-      <div class="product" onclick="playSound()">🛍️ AI Tools</div>
-      <div class="product" onclick="playSound()">🛍️ Payment QR</div>
-    </section>
+    <div class="game">
+      <p>🧑 Nama Kamu:</p>
+      <input type="text" id="playerName" placeholder="Masukkan nama...">
+    </div>
 
-    <section class="game-section">
-      <h2 data-aos="fade-right">🎯 Game Mini</h2>
-      <div class="game" data-aos="zoom-in">
-        <p>🎲 Tebak Angka (1-10)</p>
-        <input type="number" id="tebakAngka" placeholder="1-10">
-        <button onclick="tebakGame()">Coba</button>
-      </div>
+    <!-- Game Kuis -->
+    <div class="game">
+      <p>🧠 Kuis Cepat</p>
+      <p id="soal">Soal akan muncul...</p>
+      <button onclick="jawab(true)">✅ Benar</button>
+      <button onclick="jawab(false)">❌ Salah</button>
+    </div>
 
-      <div class="game" data-aos="zoom-in">
-        <p>⚔️ Batu Gunting Kertas</p>
-        <button onclick="main('batu')">🪨 Batu</button>
-        <button onclick="main('gunting')">✂️ Gunting</button>
-        <button onclick="main('kertas')">📄 Kertas</button>
-      </div>
-    </section>
+    <!-- Memory Game -->
+    <div class="game">
+      <p>🧩 Memory Game</p>
+      <div class="memory-grid" id="memoryGrid"></div>
+    </div>
+
+    <!-- Login Admin -->
+    <div class="login-box">
+      <p>🔐 Login Admin (PIN)</p>
+      <input type="password" id="adminPin" placeholder="PIN Admin">
+      <button onclick="loginAdmin()">Login</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard-box hide" id="leaderboard">
+      <h2>🏆 Leaderboard</h2>
+      <ul id="listSkor"></ul>
+      <button onclick="resetLeaderboard()">🗑️ Reset Leaderboard</button>
+    </div>
   </div>
 
   <!-- Sound -->
   <audio id="clickSound" src="https://assets.mixkit.co/sfx/download/mixkit-select-click-1109.mp3"></audio>
-  <audio id="notifSound" src="https://assets.mixkit.co/sfx/download/mixkit-positive-interface-beep-221.mp3"></audio>
 
-  <!-- Script -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
     AOS.init();
-
-    function playSound() {
-      document.getElementById("clickSound").play();
-      if (navigator.vibrate) navigator.vibrate(100);
-    }
+    const PIN_ADMIN = "9911";
+    const clickSound = document.getElementById("clickSound");
 
     function toggleTheme() {
       document.body.classList.toggle("light");
-      document.getElementById("notifSound").play();
     }
 
-    function tebakGame() {
-      const input = document.getElementById("tebakAngka").value;
-      const random = Math.floor(Math.random() * 10) + 1;
-      if (parseInt(input) === random) {
-        alert("🎉 Benar!");
-        navigator.vibrate(200);
+    function playSound() {
+      clickSound.play();
+      if (navigator.vibrate) navigator.vibrate(80);
+    }
+
+    const pertanyaan = [
+      { tanya: "Langit berwarna biru?", benar: true },
+      { tanya: "2 + 2 = 5?", benar: false },
+      { tanya: "Air lebih panas dari api?", benar: false },
+      { tanya: "Apakah bumi bulat?", benar: true },
+    ];
+    let current;
+    tampilkanSoal();
+
+    function tampilkanSoal() {
+      current = pertanyaan[Math.floor(Math.random() * pertanyaan.length)];
+      document.getElementById("soal").innerText = current.tanya;
+    }
+
+    function jawab(jawaban) {
+      const nama = getNama();
+      if (!nama) return;
+      let hasil = (jawaban === current.benar) ? 10 : -5;
+      simpanSkor(nama, hasil);
+      alert(hasil > 0 ? "✅ Benar!" : "❌ Salah!");
+      playSound();
+      tampilkanSoal();
+    }
+
+    // Memory game
+    const cards = ["A", "B", "C", "D", "A", "B", "C", "D"];
+    let opened = [];
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+    function generateMemory() {
+      const grid = document.getElementById("memoryGrid");
+      grid.innerHTML = "";
+      let mixed = shuffle([...cards]);
+      mixed.forEach(char => {
+        let card = document.createElement("div");
+        card.className = "card";
+        card.dataset.char = char;
+        card.onclick = function () {
+          if (opened.length < 2 && !card.classList.contains("open")) {
+            card.classList.add("open");
+            card.innerText = char;
+            opened.push(card);
+            if (opened.length === 2) {
+              if (opened[0].dataset.char === opened[1].dataset.char) {
+                simpanSkor(getNama(), 15);
+                opened = [];
+              } else {
+                setTimeout(() => {
+                  opened.forEach(c => { c.classList.remove("open"); c.innerText = ""; });
+                  opened = [];
+                }, 800);
+              }
+            }
+            playSound();
+          }
+        };
+        grid.appendChild(card);
+      });
+    }
+    generateMemory();
+
+    function getNama() {
+      const nama = document.getElementById("playerName").value.trim();
+      if (!nama) {
+        alert("Isi nama dulu!");
+        return null;
+      }
+      return nama;
+    }
+
+    function simpanSkor(nama, skor) {
+      let data = JSON.parse(localStorage.getItem("leaderboard")) || [];
+      const existing = data.find(d => d.nama === nama);
+      if (existing) existing.skor += skor;
+      else data.push({ nama, skor });
+      localStorage.setItem("leaderboard", JSON.stringify(data));
+    }
+
+    function loginAdmin() {
+      const pin = document.getElementById("adminPin").value;
+      if (pin === PIN_ADMIN) {
+        document.getElementById("leaderboard").classList.remove("hide");
+        tampilLeaderboard();
+        alert("✅ Login admin sukses!");
       } else {
-        alert("❌ Salah! Angka: " + random);
+        alert("❌ PIN salah!");
       }
       playSound();
     }
 
-    function main(user) {
-      const pilihan = ["batu", "gunting", "kertas"];
-      const bot = pilihan[Math.floor(Math.random() * 3)];
-      let hasil = "";
-      if (user === bot) hasil = "Seri!";
-      else if (
-        (user === "batu" && bot === "gunting") ||
-        (user === "gunting" && bot === "kertas") ||
-        (user === "kertas" && bot === "batu")
-      ) hasil = "Kamu Menang!";
-      else hasil = "Kamu Kalah!";
-      alert(`🤖 Bot: ${bot}\n🧠 Kamu: ${user}\n🎯 ${hasil}`);
-      playSound();
+    function tampilLeaderboard() {
+      let data = JSON.parse(localStorage.getItem("leaderboard")) || [];
+      data.sort((a, b) => b.skor - a.skor);
+      const list = document.getElementById("listSkor");
+      list.innerHTML = "";
+      data.forEach(d => {
+        list.innerHTML += `<li>👤 ${d.nama} — ⭐ ${d.skor}</li>`;
+      });
+    }
+
+    function resetLeaderboard() {
+      if (confirm("Yakin reset leaderboard?")) {
+        localStorage.removeItem("leaderboard");
+        tampilLeaderboard();
+      }
     }
   </script>
 </body>
