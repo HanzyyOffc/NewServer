@@ -3,217 +3,172 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hanzyy Produk</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+  <title>Hanzyy Produk & Game Center</title>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
   <style>
     :root {
-      --bg-color: #1e1e2f;
-      --card-color: #292941;
-      --text-color: #fff;
-      --primary: #00ffd1;
-      --btn-text: #000;
+      --primary: #00ffd5;
+      --bg: #0f0f0f;
+      --text: #ffffff;
     }
-    .light-mode {
-      --bg-color: #f0f0f0;
-      --card-color: #fff;
-      --text-color: #111;
-      --primary: #007bff;
-      --btn-text: #fff;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.4s;
+    }
+    .container {
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary);
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .product {
+      background: #1f1f1f;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 0 15px #00ffd580;
+      text-align: center;
       transition: 0.3s;
+      cursor: pointer;
     }
-    .logo-intro {
-      font-size: 2em; font-weight: bold; color: var(--primary);
-      animation: fadeInScale 2s ease-in-out forwards; opacity: 0; transform: scale(0.5);
+    .product:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffd5cc;
     }
-    @keyframes fadeInScale {
-      to { opacity: 1; transform: scale(1); }
+    .game-section {
+      margin-top: 3rem;
     }
-    .container { padding: 30px 20px; text-align: center; }
-    .greeting { font-size: 1.6em; margin-bottom: 20px; }
-    .products {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px; padding: 20px;
+    .game {
+      background: #121212;
+      border: 1px solid #00ffd5;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px #00ffd5aa;
     }
-    .product-card {
-      background: var(--card-color); border-radius: 20px; padding: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: transform 0.3s;
+    button {
+      padding: 10px 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-title { font-size: 1.2em; margin-bottom: 10px; }
-    .product-price { color: var(--primary); margin-bottom: 15px; }
-    .btn {
-      padding: 10px 20px; background: var(--primary); color: var(--btn-text);
-      border: none; border-radius: 30px; cursor: pointer; font-weight: bold;
-      transition: 0.3s;
+    button:hover {
+      transform: scale(1.05);
+      background: #00fff2;
     }
-    .btn:hover { opacity: 0.8; }
-    #cart, #themeToggle, #adminPanelBtn {
-  bottom: 120px;
-  left: 20px;
-  background: var(--primary);
-  color: var(--btn-text);
-  padding: 10px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: bold;
-  z-index: 999;
-  display: none;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeSlideIn 1s ease-out forwards;
-}
-    #cart { bottom: 20px; right: 20px; }
-    #themeToggle { bottom: 70px; right: 20px; }
-    #adminPanelBtn { top: 20px; left: 20px; display: none; }
-    #cart-items {
-      position: fixed; bottom: 120px; right: 20px;
-      background: var(--card-color); padding: 15px; border-radius: 10px;
-      display: none; max-width: 300px; color: var(--text-color);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: black;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      box-shadow: 0 0 12px var(--primary);
     }
-    #userForm input, #adminLogin input {
-      padding: 10px; margin: 5px 0; width: 90%; border-radius: 5px; border: none;
-    }
-    #adminLogin {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center;
-    }
-    #adminLoginBox {
-      background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center;
-    }
-  #adminPanelBtn:hover {
-  background: #ff4b91;
-  color: white;
-}
 
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>
+    /* Dark/Light Theme */
+    body.light {
+      --bg: #ffffff;
+      --text: #000000;
+      --primary: #0f62ff;
+    }
+  </style>
 </head>
 <body>
-  <audio id="startSound" src="https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3" preload="auto"></audio>
-  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/24/audio_6d8abfce82.mp3" preload="auto"></audio>
-  <audio id="successSound" src="https://cdn.pixabay.com/audio/2021/08/09/audio_655f9c48d6.mp3" preload="auto"></audio>
-  <audio id="errorSound" src="https://cdn.pixabay.com/audio/2022/03/22/audio_3e6f1aef7a.mp3" preload="auto"></audio>
-
-  <div id="adminPanelBtn" onclick="showAdminPanel()">🔐 Admin</div>
-  <div id="adminLogin">
-    <div id="adminLoginBox">
-      <h3>Login Admin</h3>
-      <input type="password" id="adminPass" placeholder="Password Admin">
-      <button class="btn" onclick="loginAdmin()">Login</button>
-    </div>
-  </div>
-
+  <div class="theme-toggle" onclick="toggleTheme()">🎨 Theme</div>
   <div class="container">
-    <div class="greeting">Selamat datang di <b>HanzyyOffc Produk</b>!</div>
-    <div class="products">
-      <div class="product-card">
-        <div class="product-title">Script WhatsApp Premium</div>
-        <div class="product-price">Rp50.000</div>
-        <button class="btn" onclick="addToCart('Script WhatsApp Premium', 50000)">+ Keranjang</button>
+    <h1 data-aos="zoom-in">🎮 Hanzyy Produk & Game Center</h1>
+
+    <section class="product-grid" data-aos="fade-up">
+      <div class="product" onclick="playSound()">🛍️ Script WhatsApp</div>
+      <div class="product" onclick="playSound()">🛍️ Telegram Bot</div>
+      <div class="product" onclick="playSound()">🛍️ Web Panel</div>
+      <div class="product" onclick="playSound()">🛍️ Auto Reply</div>
+      <div class="product" onclick="playSound()">🛍️ AI Tools</div>
+      <div class="product" onclick="playSound()">🛍️ Payment QR</div>
+    </section>
+
+    <section class="game-section">
+      <h2 data-aos="fade-right">🎯 Game Mini</h2>
+      <div class="game" data-aos="zoom-in">
+        <p>🎲 Tebak Angka (1-10)</p>
+        <input type="number" id="tebakAngka" placeholder="1-10">
+        <button onclick="tebakGame()">Coba</button>
       </div>
-      <div class="product-card">
-        <div class="product-title">Telegram Auto Respon</div>
-        <div class="product-price">Rp30.000</div>
-        <button class="btn" onclick="addToCart('Telegram Auto Respon', 30000)">+ Keranjang</button>
+
+      <div class="game" data-aos="zoom-in">
+        <p>⚔️ Batu Gunting Kertas</p>
+        <button onclick="main('batu')">🪨 Batu</button>
+        <button onclick="main('gunting')">✂️ Gunting</button>
+        <button onclick="main('kertas')">📄 Kertas</button>
       </div>
-      <div class="product-card">
-        <div class="product-title">Bot Anti-Bajak</div>
-        <div class="product-price">Rp75.000</div>
-        <button class="btn" onclick="addToCart('Bot Anti-Bajak', 75000)">+ Keranjang</button>
-      </div>
-    </div>
+    </section>
   </div>
 
-  <div id="themeToggle" onclick="toggleTheme()">🌗 Tema</div>
-  <div id="cart" onclick="toggleCart()">🛒 Keranjang</div>
-  <div id="cart-items"></div>
+  <!-- Sound -->
+  <audio id="clickSound" src="https://assets.mixkit.co/sfx/download/mixkit-select-click-1109.mp3"></audio>
+  <audio id="notifSound" src="https://assets.mixkit.co/sfx/download/mixkit-positive-interface-beep-221.mp3"></audio>
 
+  <!-- Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    function vibrate(ms = 100) { if (navigator.vibrate) navigator.vibrate(ms); }
-    document.addEventListener("click", (e) => {
-      if (e.target.matches(".btn") || e.target.matches("button")) {
-        document.getElementById("clickSound").play().catch(() => {}); vibrate(60);
-      }
-    });
-    function playSuccess() { document.getElementById("successSound").play(); vibrate(100); }
-    function playError() { document.getElementById("errorSound").play(); vibrate([100, 50, 100]); }
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("startSound").volume = 0.5;
-      document.getElementById("startSound").play().catch(() => {});
-      document.getElementById("adminPanelBtn").style.display = "block";
-    });
+    AOS.init();
 
-    let cart = JSON.parse(localStorage.getItem("hanzyy_cart")) || [];
-    function addToCart(name, price) {
-      cart.push({ name, price });
-      localStorage.setItem("hanzyy_cart", JSON.stringify(cart));
-      updateCartView();
+    function playSound() {
+      document.getElementById("clickSound").play();
+      if (navigator.vibrate) navigator.vibrate(100);
     }
-    function toggleCart() {
-      const cartBox = document.getElementById("cart-items");
-      cartBox.style.display = cartBox.style.display === "block" ? "none" : "block";
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      document.getElementById("notifSound").play();
     }
-    function updateCartView() {
-      const container = document.getElementById("cart-items");
-      container.innerHTML = `
-        <b>Keranjang:</b><br/><div id="userForm">
-        <input type="text" id="nama" placeholder="Nama Anda">
-        <input type="text" id="nomor" placeholder="No. WhatsApp">
-      </div>`;
-      let total = 0;
-      cart.forEach((item) => {
-        container.innerHTML += `- ${item.name} <span style='float:right'>Rp${item.price.toLocaleString()}</span><br/>`;
-        total += item.price;
-      });
-      if (cart.length)
-        container.innerHTML += `<hr><b>Total: Rp${total.toLocaleString()}</b><br/><br/><button class='btn' onclick='checkout()'>Checkout</button>`;
-      else
-        container.innerHTML += "<i>Keranjang kosong</i>";
-    }
-    function checkout() {
-      const nama = document.getElementById("nama").value.trim();
-      const nomor = document.getElementById("nomor").value.trim();
-      if (!nama || !nomor) return playError();
-      const orderText = cart.map(i => `- ${i.name} (Rp${i.price.toLocaleString()})`).join('%0A');
-      const total = cart.reduce((a, b) => a + b.price, 0);
-      const pesan = `Nama: ${nama}%0ANo: ${nomor}%0APesanan:%0A${orderText}%0ATotal: Rp${total.toLocaleString()}`;
-      window.open(`https://wa.me/6288989566141?text=${pesan}`);
-      fetch(`https://api.telegram.org/botTOKEN/sendMessage?chat_id=ID_TELEGRAM&text=${pesan}`);
-      playSuccess();
-      alert("Checkout berhasil!");
-      cart = [];
-      localStorage.removeItem("hanzyy_cart");
-      updateCartView();
-    }
-    function toggleTheme() { document.body.classList.toggle("light-mode"); }
-    function showAdminPanel() {
-  document.getElementById("adminLogin").style.display = "flex";
-  new Audio("https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3").play();
-}
-    function loginAdmin() {
-      const pass = document.getElementById("adminPass").value;
-      if (pass === "hanzyy123") {
-        playSuccess();
-        alert("Selamat datang Admin! Anda bisa mengakses panel admin.");
-        document.getElementById("adminLogin").style.display = "none";
+
+    function tebakGame() {
+      const input = document.getElementById("tebakAngka").value;
+      const random = Math.floor(Math.random() * 10) + 1;
+      if (parseInt(input) === random) {
+        alert("🎉 Benar!");
+        navigator.vibrate(200);
       } else {
-        playError();
-        alert("Password salah!");
+        alert("❌ Salah! Angka: " + random);
       }
+      playSound();
     }
-    updateCartView();
+
+    function main(user) {
+      const pilihan = ["batu", "gunting", "kertas"];
+      const bot = pilihan[Math.floor(Math.random() * 3)];
+      let hasil = "";
+      if (user === bot) hasil = "Seri!";
+      else if (
+        (user === "batu" && bot === "gunting") ||
+        (user === "gunting" && bot === "kertas") ||
+        (user === "kertas" && bot === "batu")
+      ) hasil = "Kamu Menang!";
+      else hasil = "Kamu Kalah!";
+      alert(`🤖 Bot: ${bot}\n🧠 Kamu: ${user}\n🎯 ${hasil}`);
+      playSound();
+    }
   </script>
 </body>
 </html>
