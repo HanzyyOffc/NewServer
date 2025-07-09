@@ -28,15 +28,13 @@
       transition: 0.3s;
     }
     #loader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg-color); display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       z-index: 9999; color: var(--text-color); font-size: 1.5em; font-weight: bold;
     }
     #startingText {
       font-size: 1.5em; margin-bottom: 20px; height: 30px; overflow: hidden;
-      white-space: nowrap; border-right: 2px solid var(--text-color);
-      animation: blink 0.7s step-end infinite;
+      white-space: nowrap; border-right: 2px solid var(--text-color); animation: blink 0.7s step-end infinite;
     }
     @keyframes blink { 50% { border-color: transparent; } }
     .spinner {
@@ -71,40 +69,30 @@
       transition: 0.3s;
     }
     .btn:hover { opacity: 0.8; }
-    #cart {
-      position: fixed; bottom: 20px; right: 20px;
+    #cart, #themeToggle, #adminPanelBtn {
+      position: fixed;
       background: var(--primary); color: var(--btn-text);
       padding: 10px 20px; border-radius: 30px;
       cursor: pointer; font-weight: bold; z-index: 999;
     }
+    #cart { bottom: 20px; right: 20px; }
+    #themeToggle { bottom: 70px; right: 20px; }
+    #adminPanelBtn { top: 20px; left: 20px; display: none; }
     #cart-items {
-      position: fixed; bottom: 90px; right: 20px;
+      position: fixed; bottom: 120px; right: 20px;
       background: var(--card-color); padding: 15px; border-radius: 10px;
       display: none; max-width: 300px; color: var(--text-color);
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
-    #themeToggle {
-      position: fixed; top: 20px; right: 20px;
-      background: var(--primary); color: var(--btn-text);
-      padding: 10px 20px; border: none; border-radius: 30px;
-      cursor: pointer; font-weight: bold; z-index: 999;
+    #userForm input, #adminLogin input {
+      padding: 10px; margin: 5px 0; width: 90%; border-radius: 5px; border: none;
     }
-    .admin-btn {
-      position: fixed; top: 70px; right: 20px; display: none;
-      background: var(--primary); color: var(--btn-text);
-      padding: 10px 20px; border: none; border-radius: 30px;
-      cursor: pointer; font-weight: bold; z-index: 999;
+    #adminLogin {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center;
     }
-    #adminLoginBox, #adminChangePasswordBox {
-      display: none; position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-      align-items: center; justify-content: center; z-index: 9999;
-    }
-    #adminLoginBox form, #adminChangePasswordBox form {
+    #adminLoginBox {
       background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center;
-    }
-    #adminLoginBox input, #adminChangePasswordBox input {
-      width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none;
     }
   </style>
 </head>
@@ -115,11 +103,44 @@
     <div class="spinner"></div>
   </div>
 
-  <!-- SUARA NOTIFIKASI -->
   <audio id="startSound" src="https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3" preload="auto"></audio>
   <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/24/audio_6d8abfce82.mp3" preload="auto"></audio>
   <audio id="successSound" src="https://cdn.pixabay.com/audio/2021/08/09/audio_655f9c48d6.mp3" preload="auto"></audio>
   <audio id="errorSound" src="https://cdn.pixabay.com/audio/2022/03/22/audio_3e6f1aef7a.mp3" preload="auto"></audio>
+
+  <div id="adminPanelBtn" onclick="showAdminPanel()">🔐 Admin</div>
+  <div id="adminLogin">
+    <div id="adminLoginBox">
+      <h3>Login Admin</h3>
+      <input type="password" id="adminPass" placeholder="Password Admin">
+      <button class="btn" onclick="loginAdmin()">Login</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="greeting">Selamat datang di <b>HanzyyOffc Produk</b>!</div>
+    <div class="products">
+      <div class="product-card">
+        <div class="product-title">Script WhatsApp Premium</div>
+        <div class="product-price">Rp50.000</div>
+        <button class="btn" onclick="addToCart('Script WhatsApp Premium', 50000)">+ Keranjang</button>
+      </div>
+      <div class="product-card">
+        <div class="product-title">Telegram Auto Respon</div>
+        <div class="product-price">Rp30.000</div>
+        <button class="btn" onclick="addToCart('Telegram Auto Respon', 30000)">+ Keranjang</button>
+      </div>
+      <div class="product-card">
+        <div class="product-title">Bot Anti-Bajak</div>
+        <div class="product-price">Rp75.000</div>
+        <button class="btn" onclick="addToCart('Bot Anti-Bajak', 75000)">+ Keranjang</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="themeToggle" onclick="toggleTheme()">🌗 Tema</div>
+  <div id="cart" onclick="toggleCart()">🛒 Keranjang</div>
+  <div id="cart-items"></div>
 
   <script>
     const text = "STARTING...";
@@ -131,52 +152,76 @@
         setTimeout(typeEffect, 100);
       }
     }
-
-    // Fungsi getar
-    function vibrate(ms = 100) {
-      if (navigator.vibrate) navigator.vibrate(ms);
-    }
-
-    // Suara klik untuk semua tombol
+    function vibrate(ms = 100) { if (navigator.vibrate) navigator.vibrate(ms); }
     document.addEventListener("click", (e) => {
       if (e.target.matches(".btn") || e.target.matches("button")) {
-        document.getElementById("clickSound").play().catch(() => {});
-        vibrate(60);
+        document.getElementById("clickSound").play().catch(() => {}); vibrate(60);
       }
     });
-
-    function playSuccess() {
-      document.getElementById("successSound").play();
-      vibrate(100);
-    }
-
-    function playError() {
-      document.getElementById("errorSound").play();
-      vibrate([100, 50, 100]);
-    }
-
-    // Simulasi login admin
-    function adminLogin(user, pass) {
-      if (user === "admin" && pass === "hanzyy123") {
-        playSuccess();
-        alert("Login sukses!");
-      } else {
-        playError();
-        alert("Login gagal!");
-      }
-    }
-
+    function playSuccess() { document.getElementById("successSound").play(); vibrate(100); }
+    function playError() { document.getElementById("errorSound").play(); vibrate([100, 50, 100]); }
     window.addEventListener("DOMContentLoaded", () => {
-      typeEffect();
-      document.getElementById("startSound").volume = 0.5;
+      typeEffect(); document.getElementById("startSound").volume = 0.5;
       document.getElementById("startSound").play().catch(() => {});
+      document.getElementById("adminPanelBtn").style.display = "block";
     });
 
-    // Simulasi checkout
+    let cart = JSON.parse(localStorage.getItem("hanzyy_cart")) || [];
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      localStorage.setItem("hanzyy_cart", JSON.stringify(cart));
+      updateCartView();
+    }
+    function toggleCart() {
+      const cartBox = document.getElementById("cart-items");
+      cartBox.style.display = cartBox.style.display === "block" ? "none" : "block";
+    }
+    function updateCartView() {
+      const container = document.getElementById("cart-items");
+      container.innerHTML = `
+        <b>Keranjang:</b><br/><div id="userForm">
+        <input type="text" id="nama" placeholder="Nama Anda">
+        <input type="text" id="nomor" placeholder="No. WhatsApp">
+      </div>`;
+      let total = 0;
+      cart.forEach((item) => {
+        container.innerHTML += `- ${item.name} <span style='float:right'>Rp${item.price.toLocaleString()}</span><br/>`;
+        total += item.price;
+      });
+      if (cart.length)
+        container.innerHTML += `<hr><b>Total: Rp${total.toLocaleString()}</b><br/><br/><button class='btn' onclick='checkout()'>Checkout</button>`;
+      else
+        container.innerHTML += "<i>Keranjang kosong</i>";
+    }
     function checkout() {
+      const nama = document.getElementById("nama").value.trim();
+      const nomor = document.getElementById("nomor").value.trim();
+      if (!nama || !nomor) return playError();
+      const orderText = cart.map(i => `- ${i.name} (Rp${i.price.toLocaleString()})`).join('%0A');
+      const total = cart.reduce((a, b) => a + b.price, 0);
+      const pesan = `Nama: ${nama}%0ANo: ${nomor}%0APesanan:%0A${orderText}%0ATotal: Rp${total.toLocaleString()}`;
+      window.open(`https://wa.me/6288989566141?text=${pesan}`);
+      fetch(`https://api.telegram.org/botTOKEN/sendMessage?chat_id=ID_TELEGRAM&text=${pesan}`);
       playSuccess();
       alert("Checkout berhasil!");
+      cart = [];
+      localStorage.removeItem("hanzyy_cart");
+      updateCartView();
     }
+    function toggleTheme() { document.body.classList.toggle("light-mode"); }
+    function showAdminPanel() { document.getElementById("adminLogin").style.display = "flex"; }
+    function loginAdmin() {
+      const pass = document.getElementById("adminPass").value;
+      if (pass === "hanzyy123") {
+        playSuccess();
+        alert("Selamat datang Admin! Anda bisa mengakses panel admin.");
+        document.getElementById("adminLogin").style.display = "none";
+      } else {
+        playError();
+        alert("Password salah!");
+      }
+    }
+    updateCartView();
   </script>
 </body>
 </html>
