@@ -13,7 +13,6 @@
       --primary: #00ffd1;
       --btn-text: #000;
     }
-
     .light-mode {
       --bg-color: #f0f0f0;
       --card-color: #fff;
@@ -21,296 +20,160 @@
       --primary: #007bff;
       --btn-text: #fff;
     }
-
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
       transition: 0.3s;
     }
-
-    #loader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--bg-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .spinner {
-      border: 5px solid #444;
-      border-top: 5px solid var(--primary);
-      border-radius: 50%;
-      width: 60px; height: 60px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .container {
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .greeting {
-      font-size: 1.6em;
-      margin-bottom: 20px;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .product-card {
-      background: var(--card-color);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      transition: transform 0.3s;
-    }
-
-    .product-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .product-title {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-
-    .product-price {
-      color: var(--primary);
-      margin-bottom: 15px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      background: var(--primary);
-      color: var(--btn-text);
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      opacity: 0.8;
-    }
-
-    #cart {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--primary);
-      color: var(--btn-text);
-      padding: 10px 20px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-      z-index: 999;
-    }
-
-    #cart-items {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      background: var(--card-color);
-      padding: 15px;
-      border-radius: 10px;
-      display: none;
-      max-width: 280px;
-      color: var(--text-color);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    }
-
-    #themeToggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--primary);
-      color: var(--btn-text);
-      padding: 10px 20px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #loginModal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-    }
-
-    #loginBox {
-      background: var(--card-color);
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      color: var(--text-color);
-    }
-
-    #loginBox input {
-      padding: 10px;
-      width: 100%;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: none;
-    }
-
-    #loginBox button {
-      padding: 10px 20px;
-      background: var(--primary);
-      color: var(--btn-text);
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .checkout-btn {
-      margin-top: 15px;
-      background: orange;
-    }
+    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    .spinner { border: 5px solid #444; border-top: 5px solid var(--primary); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .container { padding: 30px 20px; text-align: center; }
+    .greeting { font-size: 1.6em; margin-bottom: 20px; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+    .product-card { background: var(--card-color); border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: transform 0.3s; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-title { font-size: 1.2em; margin-bottom: 10px; }
+    .product-price { color: var(--primary); margin-bottom: 15px; }
+    .btn { padding: 10px 20px; background: var(--primary); color: var(--btn-text); border: none; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .btn:hover { opacity: 0.8; }
+    #cart { position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
+    #cart-items { position: fixed; bottom: 90px; right: 20px; background: var(--card-color); padding: 15px; border-radius: 10px; display: none; max-width: 300px; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    #themeToggle, .admin-btn { position: fixed; top: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
+    .admin-btn { top: 70px; }
   </style>
 </head>
 <body>
-  <!-- Loader -->
-  <div id="loader">
-    <div class="spinner"></div>
-  </div>
-
-  <!-- Theme Switch -->
+  <div id="loader"><div class="spinner"></div></div>
   <button id="themeToggle">🌙 Tema</button>
-
-  <!-- Keranjang -->
+  <button class="admin-btn" onclick="toggleAdminPanel()">📋 Panel Admin</button>
   <div id="cart">🛒 Keranjang (<span id="cartCount">0</span>)</div>
   <div id="cart-items"></div>
-
-  <!-- Login -->
-  <div id="loginModal">
-    <div id="loginBox">
-      <h3>Login Admin</h3>
-      <input type="password" id="adminPass" placeholder="Password admin" />
-      <button onclick="checkLogin()">Masuk</button>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="container" style="display:none;" id="mainContent">
-    <div class="greeting" id="greetingText">Halo, pengguna browser!</div>
+  <div class="container" id="mainContent" style="display:none;">
+    <div class="greeting" id="greetingText"></div>
     <div class="products" id="productList"></div>
   </div>
-
+  <div class="container" id="adminPanel" style="display:none;">
+    <h2>📦 Riwayat Checkout</h2>
+    <div id="riwayatList"></div>
+  </div>
   <script>
     const products = [
       { name: 'Script WhatsApp', price: 50000 },
       { name: 'Script Telegram', price: 65000 },
       { name: 'Bot Panel', price: 80000 }
     ];
-
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     function saveCart() {
       localStorage.setItem('cart', JSON.stringify(cart));
       document.getElementById("cartCount").textContent = cart.length;
     }
-
     function displayProducts() {
       const list = document.getElementById("productList");
       list.innerHTML = "";
       products.forEach((p, i) => {
-        list.innerHTML += `
-          <div class="product-card">
-            <div class="product-title">${p.name}</div>
-            <div class="product-price">Rp ${p.price.toLocaleString()}</div>
-            <button class="btn" onclick="addToCart(${i})">+ Keranjang</button>
-          </div>
-        `;
+        list.innerHTML += `<div class="product-card">
+          <div class="product-title">${p.name}</div>
+          <div class="product-price">Rp ${p.price.toLocaleString()}</div>
+          <button class="btn" onclick="addToCart(${i})">+ Keranjang</button></div>`;
       });
     }
-
     function addToCart(index) {
       cart.push(products[index]);
       saveCart();
       alert(`Ditambahkan: ${products[index].name}`);
     }
-
-    function updateCartDisplay() {
-      const box = document.getElementById("cart-items");
-      if (cart.length === 0) {
-        box.innerHTML = "Keranjang kosong";
-      } else {
-        const items = cart.map(p => `- ${p.name}`).join("<br>");
-        const total = cart.reduce((sum, p) => sum + p.price, 0);
-        box.innerHTML = `
-          <b>Isi Keranjang:</b><br>${items}<br><br>
-          <b>Total:</b> Rp ${total.toLocaleString()}<br>
-          <button class="btn checkout-btn" onclick="checkout()">Checkout</button>
-        `;
-      }
-    }
-
     function checkout() {
-      alert("Checkout berhasil!\nTotal pembayaran: Rp " + cart.reduce((sum, p) => sum + p.price, 0).toLocaleString());
+      const box = document.getElementById("cart-items");
+      const items = cart.map(p => `- ${p.name}`).join("<br>");
+      const total = cart.reduce((sum, p) => sum + p.price, 0);
+      box.innerHTML = `
+        <form id="checkoutForm" onsubmit="handleCheckout(event)" style="margin-top:10px;">
+          <input type="text" id="custName" placeholder="Nama Anda" required style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;border:none;">
+          <input type="text" id="custPhone" placeholder="Nomor WhatsApp" required style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;border:none;">
+          <select id="paymentMethod" style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;">
+            <option value="qris">QRIS</option>
+            <option value="dana">DANA</option>
+          </select>
+          <button class="btn" type="submit">Checkout</button>
+        </form>
+        <div><br><b>Keranjang:</b><br>${items}<br><br><b>Total:</b> Rp ${total.toLocaleString()}</div>
+        <div id="qrSection"></div>
+      `;
+      box.style.display = "block";
+    }
+    function handleCheckout(e) {
+      e.preventDefault();
+      const name = document.getElementById("custName").value;
+      const no = document.getElementById("custPhone").value;
+      const metode = document.getElementById("paymentMethod").value;
+      const total = cart.reduce((sum, p) => sum + p.price, 0);
+      const items = cart.map(p => `- ${p.name}`).join("\n");
+      const msg = `📦 Pesanan\nNama: ${name}\nNo: ${no}\n${items}\nTotal: Rp ${total.toLocaleString()}`;
+
+      // WA & Telegram
+      window.open(`https://wa.me/6288989566141?text=${encodeURIComponent(msg)}`);
+      window.open(`https://t.me/XyHanzyy?text=${encodeURIComponent(msg)}`);
+
+      // QR
+      const qrImg = metode === 'qris'
+        ? 'https://k.top4top.io/p_3474n29381.jpg'
+        : 'https://g.top4top.io/p_347205kts1.jpg';
+      document.getElementById("qrSection").innerHTML = `
+        <br><b>Scan QR:</b><br>
+        <img src="${qrImg}" style="width:100%;border-radius:10px;">
+        <p><button class='btn' onclick='finishPayment()'>✔️ Sudah Bayar</button></p>`;
+
+      simpanRiwayat(name, no, cart, total, metode);
+    }
+    function finishPayment() {
+      alert("Pembayaran diterima, terima kasih!");
       cart = [];
       saveCart();
-      updateCartDisplay();
+      document.getElementById("cart-items").style.display = "none";
+      document.getElementById("cartCount").textContent = "0";
     }
-
-    document.getElementById("cart").onclick = () => {
-      const box = document.getElementById("cart-items");
-      updateCartDisplay();
-      box.style.display = box.style.display === "none" ? "block" : "none";
-    };
-
-    function checkLogin() {
-      const pass = document.getElementById("adminPass").value;
-      if (pass === "admin123") {
-        document.getElementById("loginModal").style.display = "none";
-        setTimeout(() => {
-          document.getElementById('loader').style.display = "none";
-          document.getElementById('mainContent').style.display = "block";
-          displayProducts();
-          detectBrowser();
-          saveCart(); // update count
-        }, 1500);
-      } else {
-        alert("Password salah!");
-      }
+    function simpanRiwayat(nama, no, items, total, metode) {
+      const data = JSON.parse(localStorage.getItem("riwayatCheckout") || "[]");
+      data.push({ nama, no, items, total, metode, waktu: new Date().toLocaleString() });
+      localStorage.setItem("riwayatCheckout", JSON.stringify(data));
     }
-
-    function detectBrowser() {
-      let userAgent = navigator.userAgent;
-      let browser = "browser";
-      if (userAgent.includes("Chrome")) browser = "Chrome";
-      else if (userAgent.includes("Firefox")) browser = "Firefox";
-      else if (userAgent.includes("Safari")) browser = "Safari";
-      else if (userAgent.includes("Edge")) browser = "Edge";
-      else if (userAgent.includes("Opera") || userAgent.includes("OPR")) browser = "Opera";
-      document.getElementById("greetingText").textContent = `Halo, pengguna ${browser}! Selamat datang di Hanzyy Produk`;
+    function tampilkanRiwayat() {
+      const data = JSON.parse(localStorage.getItem("riwayatCheckout") || "[]");
+      const div = document.getElementById("riwayatList");
+      if (!data.length) return div.innerHTML = "<i>Belum ada riwayat.</i>";
+      div.innerHTML = data.map((d,i) => `
+        <div style='padding:10px;margin-bottom:10px;background:var(--card-color);border-radius:10px;'>
+          <b>${i+1}. ${d.nama}</b> (${d.no})<br>
+          Produk:<br>${d.items.map(p => '- '+p.name).join('<br>')}<br>
+          Total: Rp ${d.total.toLocaleString()}<br>
+          Metode: ${d.metode}<br>
+          Waktu: ${d.waktu}
+        </div>`).join('');
     }
-
+    function toggleAdminPanel() {
+      const el = document.getElementById("adminPanel");
+      const show = el.style.display === "none";
+      el.style.display = show ? "block" : "none";
+      if (show) tampilkanRiwayat();
+    }
+    document.getElementById("cart").onclick = checkout;
     document.getElementById("themeToggle").onclick = () => {
       document.body.classList.toggle("light-mode");
+    };
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('mainContent').style.display = "block";
+        displayProducts();
+        saveCart();
+        const ua = navigator.userAgent;
+        const b = ua.includes("Chrome") ? "Chrome" : ua.includes("Firefox") ? "Firefox" : "Browser";
+        document.getElementById("greetingText").textContent = `Halo, pengguna ${b}! Selamat datang di Hanzyy Produk`;
+      }, 1000);
     };
   </script>
 </body>
