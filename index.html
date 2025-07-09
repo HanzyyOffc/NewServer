@@ -41,14 +41,17 @@
     .btn:hover { opacity: 0.8; }
     #cart { position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
     #cart-items { position: fixed; bottom: 90px; right: 20px; background: var(--card-color); padding: 15px; border-radius: 10px; display: none; max-width: 300px; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-    #themeToggle, .admin-btn { position: fixed; top: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
-    .admin-btn { top: 70px; }
+    #themeToggle { position: fixed; top: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
+    .admin-btn { position: fixed; top: 70px; right: 20px; display: none; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
+    #adminLoginBox, #adminChangePasswordBox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 9999; }
+    #adminLoginBox form, #adminChangePasswordBox form { background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center; }
+    #adminLoginBox input, #adminChangePasswordBox input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none; }
   </style>
 </head>
 <body>
   <div id="loader"><div class="spinner"></div></div>
   <button id="themeToggle">🌙 Tema</button>
-  <button class="admin-btn" onclick="toggleAdminPanel()">📋 Panel Admin</button>
+  <button class="admin-btn" id="adminPanelBtn" onclick="openAdminLogin()">📋 Panel Admin</button>
   <div id="cart">🛒 Keranjang (<span id="cartCount">0</span>)</div>
   <div id="cart-items"></div>
   <div class="container" id="mainContent" style="display:none;">
@@ -58,123 +61,75 @@
   <div class="container" id="adminPanel" style="display:none;">
     <h2>📦 Riwayat Checkout</h2>
     <div id="riwayatList"></div>
+    <button class="btn" onclick="openChangePassword()">🔑 Ubah Password</button>
+  </div>
+  <div id="adminLoginBox">
+    <form onsubmit="submitAdminLogin(event)">
+      <h3>Login Admin Panel</h3>
+      <input type="text" id="adminUsername" placeholder="Username" required />
+      <input type="password" id="adminPassword" placeholder="Password" required />
+      <button class="btn" type="submit">Masuk</button>
+    </form>
+  </div>
+  <div id="adminChangePasswordBox">
+    <form onsubmit="submitChangePassword(event)">
+      <h3>Ubah Password</h3>
+      <input type="password" id="oldPassword" placeholder="Password Lama" required />
+      <input type="password" id="newPassword" placeholder="Password Baru" required />
+      <button class="btn" type="submit">Simpan</button>
+    </form>
   </div>
   <script>
-    const products = [
-      { name: 'Script WhatsApp', price: 50000 },
-      { name: 'Script Telegram', price: 65000 },
-      { name: 'Bot Panel', price: 80000 }
-    ];
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let ADMIN_USER = localStorage.getItem('admin_user') || 'admin';
+    let ADMIN_PASS = localStorage.getItem('admin_pass') || 'hanzyy123';
 
-    function saveCart() {
-      localStorage.setItem('cart', JSON.stringify(cart));
-      document.getElementById("cartCount").textContent = cart.length;
+    function openAdminLogin() {
+      document.getElementById("adminLoginBox").style.display = "flex";
     }
-    function displayProducts() {
-      const list = document.getElementById("productList");
-      list.innerHTML = "";
-      products.forEach((p, i) => {
-        list.innerHTML += `<div class="product-card">
-          <div class="product-title">${p.name}</div>
-          <div class="product-price">Rp ${p.price.toLocaleString()}</div>
-          <button class="btn" onclick="addToCart(${i})">+ Keranjang</button></div>`;
-      });
-    }
-    function addToCart(index) {
-      cart.push(products[index]);
-      saveCart();
-      alert(`Ditambahkan: ${products[index].name}`);
-    }
-    function checkout() {
-      const box = document.getElementById("cart-items");
-      const items = cart.map(p => `- ${p.name}`).join("<br>");
-      const total = cart.reduce((sum, p) => sum + p.price, 0);
-      box.innerHTML = `
-        <form id="checkoutForm" onsubmit="handleCheckout(event)" style="margin-top:10px;">
-          <input type="text" id="custName" placeholder="Nama Anda" required style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;border:none;">
-          <input type="text" id="custPhone" placeholder="Nomor WhatsApp" required style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;border:none;">
-          <select id="paymentMethod" style="width:100%;padding:10px;margin-bottom:10px;border-radius:5px;">
-            <option value="qris">QRIS</option>
-            <option value="dana">DANA</option>
-          </select>
-          <button class="btn" type="submit">Checkout</button>
-        </form>
-        <div><br><b>Keranjang:</b><br>${items}<br><br><b>Total:</b> Rp ${total.toLocaleString()}</div>
-        <div id="qrSection"></div>
-      `;
-      box.style.display = "block";
-    }
-    function handleCheckout(e) {
+
+    function submitAdminLogin(e) {
       e.preventDefault();
-      const name = document.getElementById("custName").value;
-      const no = document.getElementById("custPhone").value;
-      const metode = document.getElementById("paymentMethod").value;
-      const total = cart.reduce((sum, p) => sum + p.price, 0);
-      const items = cart.map(p => `- ${p.name}`).join("\n");
-      const msg = `📦 Pesanan\nNama: ${name}\nNo: ${no}\n${items}\nTotal: Rp ${total.toLocaleString()}`;
+      const user = document.getElementById("adminUsername").value;
+      const pass = document.getElementById("adminPassword").value;
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        document.getElementById("adminLoginBox").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        tampilkanRiwayat();
+      } else {
+        alert("Login gagal. Username atau password salah!");
+      }
+    }
 
-      // WA & Telegram
-      window.open(`https://wa.me/6288989566141?text=${encodeURIComponent(msg)}`);
-      window.open(`https://t.me/XyHanzyy?text=${encodeURIComponent(msg)}`);
+    function openChangePassword() {
+      document.getElementById("adminChangePasswordBox").style.display = "flex";
+    }
 
-      // QR
-      const qrImg = metode === 'qris'
-        ? 'https://k.top4top.io/p_3474n29381.jpg'
-        : 'https://g.top4top.io/p_347205kts1.jpg';
-      document.getElementById("qrSection").innerHTML = `
-        <br><b>Scan QR:</b><br>
-        <img src="${qrImg}" style="width:100%;border-radius:10px;">
-        <p><button class='btn' onclick='finishPayment()'>✔️ Sudah Bayar</button></p>`;
+    function submitChangePassword(e) {
+      e.preventDefault();
+      const oldPass = document.getElementById("oldPassword").value;
+      const newPass = document.getElementById("newPassword").value;
+      if (oldPass === ADMIN_PASS) {
+        ADMIN_PASS = newPass;
+        localStorage.setItem('admin_pass', newPass);
+        alert("Password berhasil diubah.");
+        document.getElementById("adminChangePasswordBox").style.display = "none";
+      } else {
+        alert("Password lama salah!");
+      }
+    }
 
-      simpanRiwayat(name, no, cart, total, metode);
-    }
-    function finishPayment() {
-      alert("Pembayaran diterima, terima kasih!");
-      cart = [];
-      saveCart();
-      document.getElementById("cart-items").style.display = "none";
-      document.getElementById("cartCount").textContent = "0";
-    }
-    function simpanRiwayat(nama, no, items, total, metode) {
-      const data = JSON.parse(localStorage.getItem("riwayatCheckout") || "[]");
-      data.push({ nama, no, items, total, metode, waktu: new Date().toLocaleString() });
-      localStorage.setItem("riwayatCheckout", JSON.stringify(data));
-    }
-    function tampilkanRiwayat() {
-      const data = JSON.parse(localStorage.getItem("riwayatCheckout") || "[]");
-      const div = document.getElementById("riwayatList");
-      if (!data.length) return div.innerHTML = "<i>Belum ada riwayat.</i>";
-      div.innerHTML = data.map((d,i) => `
-        <div style='padding:10px;margin-bottom:10px;background:var(--card-color);border-radius:10px;'>
-          <b>${i+1}. ${d.nama}</b> (${d.no})<br>
-          Produk:<br>${d.items.map(p => '- '+p.name).join('<br>')}<br>
-          Total: Rp ${d.total.toLocaleString()}<br>
-          Metode: ${d.metode}<br>
-          Waktu: ${d.waktu}
-        </div>`).join('');
-    }
-    function toggleAdminPanel() {
-      const el = document.getElementById("adminPanel");
-      const show = el.style.display === "none";
-      el.style.display = show ? "block" : "none";
-      if (show) tampilkanRiwayat();
-    }
-    document.getElementById("cart").onclick = checkout;
-    document.getElementById("themeToggle").onclick = () => {
-      document.body.classList.toggle("light-mode");
-    };
     window.onload = () => {
       setTimeout(() => {
         document.getElementById('loader').style.display = "none";
         document.getElementById('mainContent').style.display = "block";
+        document.getElementById('adminPanelBtn').style.display = "inline-block";
         displayProducts();
         saveCart();
         const ua = navigator.userAgent;
         const b = ua.includes("Chrome") ? "Chrome" : ua.includes("Firefox") ? "Firefox" : "Browser";
         document.getElementById("greetingText").textContent = `Halo, pengguna ${b}! Selamat datang di Hanzyy Produk`;
       }, 1000);
-    };
+    }
   </script>
 </body>
 </html>
