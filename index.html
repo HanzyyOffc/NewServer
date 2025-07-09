@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Screenshot Service</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    h1 {
+      margin-top: 0;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+    code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin: 2rem 0 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>📸 Personal Screenshot Service</h1>
+
+    <section>
+      <h2>🔹 How to use it</h2>
+      <ol>
+        <li>Generate a JWT with fields:
+          <ul>
+            <li><code>iss</code>: issuer in allowlist</li>
+            <li><code>url</code>: URL yang ingin di-screenshot</li>
+            <li>opsional: <code>width</code>, <code>height</code>, <code>deviceScaleFactor</code></li>
+            <li>opsional: <code>waitUntil</code>, <code>js</code>, <code>css</code></li>
+          </ul>
+        </li>
+        <li>Construct URL seperti:
+          <pre><code>https://yourdomain.com/api/screenshot?token=JWT_HERE</code></pre>
+        </li>
+        <li>Buka URL untuk melihat screenshot.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>🔹 Notes</h2>
+      <ul>
+        <li>Screenshot disimpan dengan cache header:
+          <code>public, immutable, s-maxage=31536000, max-age=31536000</code>
+        </li>
+        <li>Untuk invalidasi cache, gunakan token baru.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🔹 Allowed JWT issuers</h2>
+      <pre><code>iss: example.com<br/>publicKeys: [ KEY1, KEY2 ]</code></pre>
+    </section>
+
+    <footer>
+      &copy; 2025 YourName. Open‑source on GitHub.
+    </footer>
+  </div>
+
+</body>
+</html>
