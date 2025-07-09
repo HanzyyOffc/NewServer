@@ -54,11 +54,20 @@
     }
     .btn:hover { opacity: 0.8; }
     #cart, #themeToggle, #adminPanelBtn {
-      position: fixed;
-      background: var(--primary); color: var(--btn-text);
-      padding: 10px 20px; border-radius: 30px;
-      cursor: pointer; font-weight: bold; z-index: 999;
-    }
+  bottom: 120px;
+  left: 20px;
+  background: var(--primary);
+  color: var(--btn-text);
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 999;
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 1s ease-out forwards;
+}
     #cart { bottom: 20px; right: 20px; }
     #themeToggle { bottom: 70px; right: 20px; }
     #adminPanelBtn { top: 20px; left: 20px; display: none; }
@@ -78,7 +87,18 @@
     #adminLoginBox {
       background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center;
     }
-  </style>
+  #adminPanelBtn:hover {
+  background: #ff4b91;
+  color: white;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
 </head>
 <body>
   <audio id="startSound" src="https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3" preload="auto"></audio>
@@ -169,7 +189,7 @@
       const orderText = cart.map(i => `- ${i.name} (Rp${i.price.toLocaleString()})`).join('%0A');
       const total = cart.reduce((a, b) => a + b.price, 0);
       const pesan = `Nama: ${nama}%0ANo: ${nomor}%0APesanan:%0A${orderText}%0ATotal: Rp${total.toLocaleString()}`;
-      window.open(`https://wa.me/6281234567890?text=${pesan}`);
+      window.open(`https://wa.me/6288989566141?text=${pesan}`);
       fetch(`https://api.telegram.org/botTOKEN/sendMessage?chat_id=ID_TELEGRAM&text=${pesan}`);
       playSuccess();
       alert("Checkout berhasil!");
@@ -178,7 +198,10 @@
       updateCartView();
     }
     function toggleTheme() { document.body.classList.toggle("light-mode"); }
-    function showAdminPanel() { document.getElementById("adminLogin").style.display = "flex"; }
+    function showAdminPanel() {
+  document.getElementById("adminLogin").style.display = "flex";
+  new Audio("https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3").play();
+}
     function loginAdmin() {
       const pass = document.getElementById("adminPass").value;
       if (pass === "hanzyy123") {
