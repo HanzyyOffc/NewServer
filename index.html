@@ -1,238 +1,315 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hanzyy Game & Produk</title>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hanzyy Game Portal</title>
   <style>
-    :root {
-      --primary: #00ffd5;
-      --bg: #0f0f0f;
-      --text: #ffffff;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      transition: 0.4s;
+      background: #0f0f0f;
+      color: #fff;
+      overflow-x: hidden;
     }
-    .container { padding: 2rem; max-width: 800px; margin: auto; }
-    h1, h2 { text-align: center; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-    .game, .login-box {
-      background: #121212;
-      border: 1px solid #00ffd5;
-      border-radius: 10px;
-      padding: 1rem;
-      margin: 1rem 0;
+    header {
       text-align: center;
-      box-shadow: 0 0 10px #00ffd5aa;
+      padding: 1rem;
+      background: #00ffd5;
+      color: #000;
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: relative;
     }
+    #controls {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    nav {
+      display: flex;
+      overflow-x: auto;
+      background: #1a1a1a;
+    }
+    nav button {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      background: #222;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: #00ffd5;
+      color: #000;
+    }
+    .game-section {
+      display: none;
+      padding: 1rem;
+    }
+    .game-section.active {
+      display: block;
+    }
+    .game-box {
+      background: #1f1f1f;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    button, input, select {
+      padding: 10px;
+      margin: 6px 4px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    input { width: 80%; }
     .memory-grid {
       display: grid;
       grid-template-columns: repeat(4, 60px);
-      justify-content: center;
       gap: 10px;
+      justify-content: center;
       margin-top: 10px;
     }
     .card {
-      width: 60px; height: 60px;
-      background: #222; color: transparent;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 24px;
-      border-radius: 8px; cursor: pointer;
+      width: 60px;
+      height: 60px;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: transparent;
+      border-radius: 6px;
+      cursor: pointer;
     }
     .card.open {
-      background: var(--primary); color: black;
+      background: #00ffd5;
+      color: #000;
     }
-    button {
-      padding: 10px 16px; margin: 6px 4px;
-      border: none; border-radius: 8px;
-      background: var(--primary); color: black;
-      font-weight: bold; cursor: pointer;
+    canvas {
+      display: block;
+      margin: auto;
+      background: #111;
+      border: 2px solid #00ffd5;
     }
-    input { padding: 8px; width: 80%; border-radius: 6px; margin-top: 5px; }
-    .leaderboard-box { margin-top: 2rem; background: #1a1a1a; padding: 1rem; border-radius: 10px; }
-    .leaderboard-box li { margin: 5px 0; list-style: none; }
-    .theme-toggle {
-      position: fixed; top: 15px; right: 15px;
-      background: var(--primary); color: black;
-      padding: 8px 12px; border-radius: 8px; cursor: pointer;
-    }
-    .hide { display: none; }
   </style>
 </head>
 <body>
-  <div class="theme-toggle" onclick="toggleTheme()">🎨 Theme</div>
+  <header>🎮 Hanzyy Game Portal
+    <div id="controls">
+      <button onclick="toggleMute()">🔊</button>
+      <select onchange="changeSong(this.value)">
+        <option value="https://files.catbox.moe/m8tt9h.mp3">Lagu 1</option>
+        <option value="https://files.catbox.moe/74qkdi.mp3">Lagu 2</option>
+        <option value="https://files.catbox.moe/z6l4rk.mp3">Lagu 3</option>
+      </select>
+    </div>
+  </header>
+  <nav id="menu"></nav>
+  <div id="gameContainer"></div>
+
   <audio id="bgMusic" src="https://files.catbox.moe/m8tt9h.mp3" autoplay loop></audio>
+  <audio id="sfxClick" src="https://www.soundjay.com/buttons/button-16.mp3"></audio>
+  <audio id="sfxWin" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+  <audio id="sfxFail" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
 
-  <div class="container">
-    <h1 data-aos="zoom-in">🎮 Hanzyy Game Center</h1>
-
-    <div class="game">
-      <p>🧑 Nama Kamu:</p>
-      <input type="text" id="playerName" placeholder="Masukkan nama...">
-    </div>
-
-    <!-- Game Kuis -->
-    <div class="game">
-      <p>🧠 Kuis Cepat</p>
-      <p id="soal">Soal akan muncul...</p>
-      <button onclick="jawab(true)">✅ Benar</button>
-      <button onclick="jawab(false)">❌ Salah</button>
-    </div>
-
-    <!-- Memory Game -->
-    <div class="game">
-      <p>🧩 Memory Game</p>
-      <div class="memory-grid" id="memoryGrid"></div>
-    </div>
-
-    <!-- Login Admin -->
-    <div class="login-box">
-      <p>🔐 Login Admin (PIN)</p>
-      <input type="password" id="adminPin" placeholder="PIN Admin">
-      <button onclick="loginAdmin()">Login</button>
-    </div>
-
-    <!-- Leaderboard -->
-    <div class="leaderboard-box hide" id="leaderboard">
-      <h2>🏆 Leaderboard</h2>
-      <ul id="listSkor"></ul>
-      <button onclick="resetLeaderboard()">🗑️ Reset Leaderboard</button>
-    </div>
-  </div>
-
-  <!-- Sound -->
-  <audio id="clickSound" src="https://assets.mixkit.co/sfx/download/mixkit-select-click-1109.mp3"></audio>
-
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init();
-    const PIN_ADMIN = "9911";
-    const clickSound = document.getElementById("clickSound");
-
-    function toggleTheme() {
-      document.body.classList.toggle("light");
+    // Musik & Efek Suara
+    function toggleMute() {
+      const audio = document.getElementById('bgMusic');
+      audio.muted = !audio.muted;
     }
-
-    function playSound() {
-      clickSound.play();
-      if (navigator.vibrate) navigator.vibrate(80);
+    function changeSong(url) {
+      const audio = document.getElementById('bgMusic');
+      audio.src = url;
+      audio.play();
     }
+    function playClick() { document.getElementById('sfxClick').play(); }
+    function playWin() { document.getElementById('sfxWin').play(); }
+    function playFail() { document.getElementById('sfxFail').play(); }
+    document.body.addEventListener('click', playClick);
 
-    const pertanyaan = [
-      { tanya: "Langit berwarna biru?", benar: true },
-      { tanya: "2 + 2 = 5?", benar: false },
-      { tanya: "Air lebih panas dari api?", benar: false },
-      { tanya: "Apakah bumi bulat?", benar: true },
+    const games = [
+      { name: "Tebak Angka", html: `<div class='game-box'><p>Masukkan angka 1-10:</p><input type='number' id='angka'><br><button onclick='checkAngka()'>Coba</button></div>` },
+      { name: "Kuis Cepat", html: `<div class='game-box'><p id='kuisSoal'>Soal akan muncul...</p><button onclick='jawabKuis(true)'>✅ Benar</button><button onclick='jawabKuis(false)'>❌ Salah</button></div>` },
+      { name: "Memory Game", html: `<div class='game-box'><div class='memory-grid' id='memoryGrid'></div></div>` },
+      { name: "Click Speed", html: `<div class='game-box'><p>Waktu: <span id='clickTimer'>5</span> detik</p><p>Klik: <span id='clickCount'>0</span></p><button onclick='startClickSpeed()'>Mulai Klik</button></div>` },
+      { name: "Math Quiz", html: `<div class='game-box'><p id='mathQ'></p><input type='number' id='mathA'><br><button onclick='jawabMath()'>Jawab</button></div>` },
+      { name: "Coin Toss", html: `<div class='game-box'><p>Pilih:</p><button onclick='toss("Head")'>Head</button><button onclick='toss("Tail")'>Tail</button></div>` },
+      { name: "Flappy Box", html: `<div class='game-box'><canvas id='flappyCanvas' width='300' height='400'></canvas><button onclick='startFlappy()'>Start</button></div>` },
+      { name: "Snake", html: `<div class='game-box'><canvas id='snakeCanvas' width='300' height='300'></canvas><button onclick='startSnake()'>Start</button></div>` }
     ];
-    let current;
-    tampilkanSoal();
 
-    function tampilkanSoal() {
-      current = pertanyaan[Math.floor(Math.random() * pertanyaan.length)];
-      document.getElementById("soal").innerText = current.tanya;
+    const menu = document.getElementById("menu");
+    const container = document.getElementById("gameContainer");
+    games.forEach((game, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = game.name;
+      btn.onclick = () => showGame(i);
+      if (i === 0) btn.classList.add("active");
+      menu.appendChild(btn);
+
+      const div = document.createElement("div");
+      div.className = "game-section";
+      if (i === 0) div.classList.add("active");
+      div.innerHTML = game.html;
+      container.appendChild(div);
+    });
+
+    function showGame(i) {
+      document.querySelectorAll(".game-section").forEach((g, x) => g.classList.toggle("active", x === i));
+      document.querySelectorAll("nav button").forEach((b, x) => b.classList.toggle("active", x === i));
+      if (i === 1) tampilkanSoal();
+      if (i === 2) initMemory();
+      if (i === 4) generateMath();
     }
 
-    function jawab(jawaban) {
-      const nama = getNama();
-      if (!nama) return;
-      let hasil = (jawaban === current.benar) ? 10 : -5;
-      simpanSkor(nama, hasil);
-      alert(hasil > 0 ? "✅ Benar!" : "❌ Salah!");
-      playSound();
+    function checkAngka() {
+      const angka = parseInt(document.getElementById("angka").value);
+      const hasil = Math.floor(Math.random() * 10) + 1;
+      angka === hasil ? playWin() : playFail();
+      alert(angka === hasil ? "🎉 Benar!" : `❌ Salah! Angka: ${hasil}`);
+    }
+
+    const soalKuis = [ { q: "Langit biru?", a: true }, { q: "Air api?", a: false } ];
+    let currentQ;
+    function tampilkanSoal() {
+      currentQ = soalKuis[Math.floor(Math.random() * soalKuis.length)];
+      document.getElementById("kuisSoal").innerText = currentQ.q;
+    }
+    function jawabKuis(jawaban) {
+      jawaban === currentQ.a ? playWin() : playFail();
+      alert(jawaban === currentQ.a ? "✅ Benar" : "❌ Salah");
       tampilkanSoal();
     }
 
-    // Memory game
-    const cards = ["A", "B", "C", "D", "A", "B", "C", "D"];
-    let opened = [];
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-    function generateMemory() {
+    function initMemory() {
       const grid = document.getElementById("memoryGrid");
       grid.innerHTML = "";
-      let mixed = shuffle([...cards]);
-      mixed.forEach(char => {
-        let card = document.createElement("div");
-        card.className = "card";
-        card.dataset.char = char;
-        card.onclick = function () {
-          if (opened.length < 2 && !card.classList.contains("open")) {
-            card.classList.add("open");
-            card.innerText = char;
-            opened.push(card);
+      let cards = ["A","B","C","D","A","B","C","D"];
+      cards.sort(() => 0.5 - Math.random());
+      let opened = [];
+      cards.forEach(c => {
+        const el = document.createElement("div");
+        el.className = "card";
+        el.dataset.char = c;
+        el.onclick = () => {
+          if (opened.length < 2 && !el.classList.contains("open")) {
+            el.classList.add("open");
+            el.textContent = c;
+            opened.push(el);
             if (opened.length === 2) {
-              if (opened[0].dataset.char === opened[1].dataset.char) {
-                simpanSkor(getNama(), 15);
-                opened = [];
+              if (opened[0].dataset.char !== opened[1].dataset.char) {
+                setTimeout(() => opened.forEach(e => { e.classList.remove("open"); e.textContent = ""; }), 700);
               } else {
-                setTimeout(() => {
-                  opened.forEach(c => { c.classList.remove("open"); c.innerText = ""; });
-                  opened = [];
-                }, 800);
+                playWin();
               }
+              opened = [];
             }
-            playSound();
           }
         };
-        grid.appendChild(card);
-      });
-    }
-    generateMemory();
-
-    function getNama() {
-      const nama = document.getElementById("playerName").value.trim();
-      if (!nama) {
-        alert("Isi nama dulu!");
-        return null;
-      }
-      return nama;
-    }
-
-    function simpanSkor(nama, skor) {
-      let data = JSON.parse(localStorage.getItem("leaderboard")) || [];
-      const existing = data.find(d => d.nama === nama);
-      if (existing) existing.skor += skor;
-      else data.push({ nama, skor });
-      localStorage.setItem("leaderboard", JSON.stringify(data));
-    }
-
-    function loginAdmin() {
-      const pin = document.getElementById("adminPin").value;
-      if (pin === PIN_ADMIN) {
-        document.getElementById("leaderboard").classList.remove("hide");
-        tampilLeaderboard();
-        alert("✅ Login admin sukses!");
-      } else {
-        alert("❌ PIN salah!");
-      }
-      playSound();
-    }
-
-    function tampilLeaderboard() {
-      let data = JSON.parse(localStorage.getItem("leaderboard")) || [];
-      data.sort((a, b) => b.skor - a.skor);
-      const list = document.getElementById("listSkor");
-      list.innerHTML = "";
-      data.forEach(d => {
-        list.innerHTML += `<li>👤 ${d.nama} — ⭐ ${d.skor}</li>`;
+        grid.appendChild(el);
       });
     }
 
-    function resetLeaderboard() {
-      if (confirm("Yakin reset leaderboard?")) {
-        localStorage.removeItem("leaderboard");
-        tampilLeaderboard();
-      }
+    let clickCount = 0;
+    function startClickSpeed() {
+      clickCount = 0;
+      document.getElementById("clickCount").innerText = 0;
+      let time = 5;
+      document.getElementById("clickTimer").innerText = time;
+      const interval = setInterval(() => {
+        time--;
+        document.getElementById("clickTimer").innerText = time;
+        if (time === 0) {
+          clearInterval(interval);
+          alert(`Klik kamu: ${clickCount}`);
+          playWin();
+        }
+      }, 1000);
+      document.body.onclick = () => clickCount++;
+    }
+
+    let num1, num2;
+    function generateMath() {
+      num1 = Math.floor(Math.random()*10)+1;
+      num2 = Math.floor(Math.random()*10)+1;
+      document.getElementById("mathQ").innerText = `${num1} + ${num2} = ?`;
+    }
+    function jawabMath() {
+      const ans = parseInt(document.getElementById("mathA").value);
+      ans === num1 + num2 ? playWin() : playFail();
+      alert(ans === num1 + num2 ? "Benar!" : "Salah!");
+      generateMath();
+    }
+
+    function toss(tebakan) {
+      const hasil = Math.random() < 0.5 ? "Head" : "Tail";
+      tebakan === hasil ? playWin() : playFail();
+      alert(`Hasil: ${hasil} — Kamu ${tebakan === hasil ? "Menang" : "Kalah"}`);
+    }
+
+    let flappyY, velocity, gravity, intervalFlappy;
+    function startFlappy() {
+      const canvas = document.getElementById("flappyCanvas");
+      const ctx = canvas.getContext("2d");
+      flappyY = 150;
+      velocity = 0;
+      gravity = 1.5;
+      document.body.onkeydown = () => velocity = -10;
+      clearInterval(intervalFlappy);
+      intervalFlappy = setInterval(() => {
+        ctx.clearRect(0,0,300,400);
+        velocity += gravity;
+        flappyY += velocity;
+        ctx.fillStyle = "#0ff";
+        ctx.fillRect(50, flappyY, 30, 30);
+        if (flappyY > 400 || flappyY < 0) {
+          alert("Game Over!");
+          playFail();
+          clearInterval(intervalFlappy);
+        }
+      }, 30);
+    }
+
+    let snake, food, dx, dy, intervalSnake;
+    function startSnake() {
+      const canvas = document.getElementById("snakeCanvas");
+      const ctx = canvas.getContext("2d");
+      snake = [{x: 150, y: 150}];
+      food = {x: 90, y: 90};
+      dx = 30; dy = 0;
+      document.onkeydown = e => {
+        if (e.key === 'ArrowUp') [dx, dy] = [0, -30];
+        else if (e.key === 'ArrowDown') [dx, dy] = [0, 30];
+        else if (e.key === 'ArrowLeft') [dx, dy] = [-30, 0];
+        else if (e.key === 'ArrowRight') [dx, dy] = [30, 0];
+      };
+      clearInterval(intervalSnake);
+      intervalSnake = setInterval(() => {
+        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+          food = {x: Math.floor(Math.random()*10)*30, y: Math.floor(Math.random()*10)*30};
+          playWin();
+        } else {
+          snake.pop();
+        }
+        if (head.x < 0 || head.y < 0 || head.x >= 300 || head.y >= 300 || snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+          alert("Game Over!");
+          playFail();
+          clearInterval(intervalSnake);
+        }
+        ctx.clearRect(0,0,300,300);
+        ctx.fillStyle = "lime";
+        snake.forEach(p => ctx.fillRect(p.x, p.y, 28, 28));
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x, food.y, 28, 28);
+      }, 150);
     }
   </script>
 </body>
