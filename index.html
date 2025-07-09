@@ -27,108 +27,155 @@
       color: var(--text-color);
       transition: 0.3s;
     }
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-    .spinner { border: 5px solid #444; border-top: 5px solid var(--primary); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+    #loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg-color); display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999; color: var(--text-color); font-size: 1.5em; font-weight: bold;
+    }
+    #startingText {
+      font-size: 1.5em; margin-bottom: 20px; height: 30px; overflow: hidden;
+      white-space: nowrap; border-right: 2px solid var(--text-color);
+      animation: blink 0.7s step-end infinite;
+    }
+    @keyframes blink { 50% { border-color: transparent; } }
+    .spinner {
+      border: 5px solid #444; border-top: 5px solid var(--primary);
+      border-radius: 50%; width: 60px; height: 60px;
+      animation: spin 1s linear infinite; margin-top: 20px;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .logo-intro {
+      font-size: 2em; font-weight: bold; color: var(--primary);
+      animation: fadeInScale 2s ease-in-out forwards; opacity: 0; transform: scale(0.5);
+    }
+    @keyframes fadeInScale {
+      to { opacity: 1; transform: scale(1); }
+    }
     .container { padding: 30px 20px; text-align: center; }
     .greeting { font-size: 1.6em; margin-bottom: 20px; }
-    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
-    .product-card { background: var(--card-color); border-radius: 20px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: transform 0.3s; }
+    .products {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px; padding: 20px;
+    }
+    .product-card {
+      background: var(--card-color); border-radius: 20px; padding: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: transform 0.3s;
+    }
     .product-card:hover { transform: translateY(-5px); }
     .product-title { font-size: 1.2em; margin-bottom: 10px; }
     .product-price { color: var(--primary); margin-bottom: 15px; }
-    .btn { padding: 10px 20px; background: var(--primary); color: var(--btn-text); border: none; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .btn {
+      padding: 10px 20px; background: var(--primary); color: var(--btn-text);
+      border: none; border-radius: 30px; cursor: pointer; font-weight: bold;
+      transition: 0.3s;
+    }
     .btn:hover { opacity: 0.8; }
-    #cart { position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
-    #cart-items { position: fixed; bottom: 90px; right: 20px; background: var(--card-color); padding: 15px; border-radius: 10px; display: none; max-width: 300px; color: var(--text-color); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-    #themeToggle { position: fixed; top: 20px; right: 20px; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
-    .admin-btn { position: fixed; top: 70px; right: 20px; display: none; background: var(--primary); color: var(--btn-text); padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; z-index: 999; }
-    #adminLoginBox, #adminChangePasswordBox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 9999; }
-    #adminLoginBox form, #adminChangePasswordBox form { background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center; }
-    #adminLoginBox input, #adminChangePasswordBox input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none; }
+    #cart {
+      position: fixed; bottom: 20px; right: 20px;
+      background: var(--primary); color: var(--btn-text);
+      padding: 10px 20px; border-radius: 30px;
+      cursor: pointer; font-weight: bold; z-index: 999;
+    }
+    #cart-items {
+      position: fixed; bottom: 90px; right: 20px;
+      background: var(--card-color); padding: 15px; border-radius: 10px;
+      display: none; max-width: 300px; color: var(--text-color);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    #themeToggle {
+      position: fixed; top: 20px; right: 20px;
+      background: var(--primary); color: var(--btn-text);
+      padding: 10px 20px; border: none; border-radius: 30px;
+      cursor: pointer; font-weight: bold; z-index: 999;
+    }
+    .admin-btn {
+      position: fixed; top: 70px; right: 20px; display: none;
+      background: var(--primary); color: var(--btn-text);
+      padding: 10px 20px; border: none; border-radius: 30px;
+      cursor: pointer; font-weight: bold; z-index: 999;
+    }
+    #adminLoginBox, #adminChangePasswordBox {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+      align-items: center; justify-content: center; z-index: 9999;
+    }
+    #adminLoginBox form, #adminChangePasswordBox form {
+      background: var(--card-color); padding: 30px; border-radius: 10px; text-align: center;
+    }
+    #adminLoginBox input, #adminChangePasswordBox input {
+      width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none;
+    }
   </style>
 </head>
 <body>
-  <div id="loader"><div class="spinner"></div></div>
-  <button id="themeToggle">🌙 Tema</button>
-  <button class="admin-btn" id="adminPanelBtn" onclick="openAdminLogin()">📋 Panel Admin</button>
-  <div id="cart">🛒 Keranjang (<span id="cartCount">0</span>)</div>
-  <div id="cart-items"></div>
-  <div class="container" id="mainContent" style="display:none;">
-    <div class="greeting" id="greetingText"></div>
-    <div class="products" id="productList"></div>
+  <div id="loader">
+    <div class="logo-intro">HanzyyOffc</div>
+    <div id="startingText"></div>
+    <div class="spinner"></div>
   </div>
-  <div class="container" id="adminPanel" style="display:none;">
-    <h2>📦 Riwayat Checkout</h2>
-    <div id="riwayatList"></div>
-    <button class="btn" onclick="openChangePassword()">🔑 Ubah Password</button>
-  </div>
-  <div id="adminLoginBox">
-    <form onsubmit="submitAdminLogin(event)">
-      <h3>Login Admin Panel</h3>
-      <input type="text" id="adminUsername" placeholder="Username" required />
-      <input type="password" id="adminPassword" placeholder="Password" required />
-      <button class="btn" type="submit">Masuk</button>
-    </form>
-  </div>
-  <div id="adminChangePasswordBox">
-    <form onsubmit="submitChangePassword(event)">
-      <h3>Ubah Password</h3>
-      <input type="password" id="oldPassword" placeholder="Password Lama" required />
-      <input type="password" id="newPassword" placeholder="Password Baru" required />
-      <button class="btn" type="submit">Simpan</button>
-    </form>
-  </div>
+
+  <!-- SUARA NOTIFIKASI -->
+  <audio id="startSound" src="https://cdn.pixabay.com/audio/2022/08/01/audio_9cd1776fcd.mp3" preload="auto"></audio>
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/24/audio_6d8abfce82.mp3" preload="auto"></audio>
+  <audio id="successSound" src="https://cdn.pixabay.com/audio/2021/08/09/audio_655f9c48d6.mp3" preload="auto"></audio>
+  <audio id="errorSound" src="https://cdn.pixabay.com/audio/2022/03/22/audio_3e6f1aef7a.mp3" preload="auto"></audio>
+
   <script>
-    let ADMIN_USER = localStorage.getItem('admin_user') || 'admin';
-    let ADMIN_PASS = localStorage.getItem('admin_pass') || 'hanzyy123';
-
-    function openAdminLogin() {
-      document.getElementById("adminLoginBox").style.display = "flex";
-    }
-
-    function submitAdminLogin(e) {
-      e.preventDefault();
-      const user = document.getElementById("adminUsername").value;
-      const pass = document.getElementById("adminPassword").value;
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
-        document.getElementById("adminLoginBox").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        tampilkanRiwayat();
-      } else {
-        alert("Login gagal. Username atau password salah!");
+    const text = "STARTING...";
+    let i = 0;
+    function typeEffect() {
+      if (i < text.length) {
+        document.getElementById("startingText").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeEffect, 100);
       }
     }
 
-    function openChangePassword() {
-      document.getElementById("adminChangePasswordBox").style.display = "flex";
+    // Fungsi getar
+    function vibrate(ms = 100) {
+      if (navigator.vibrate) navigator.vibrate(ms);
     }
 
-    function submitChangePassword(e) {
-      e.preventDefault();
-      const oldPass = document.getElementById("oldPassword").value;
-      const newPass = document.getElementById("newPassword").value;
-      if (oldPass === ADMIN_PASS) {
-        ADMIN_PASS = newPass;
-        localStorage.setItem('admin_pass', newPass);
-        alert("Password berhasil diubah.");
-        document.getElementById("adminChangePasswordBox").style.display = "none";
+    // Suara klik untuk semua tombol
+    document.addEventListener("click", (e) => {
+      if (e.target.matches(".btn") || e.target.matches("button")) {
+        document.getElementById("clickSound").play().catch(() => {});
+        vibrate(60);
+      }
+    });
+
+    function playSuccess() {
+      document.getElementById("successSound").play();
+      vibrate(100);
+    }
+
+    function playError() {
+      document.getElementById("errorSound").play();
+      vibrate([100, 50, 100]);
+    }
+
+    // Simulasi login admin
+    function adminLogin(user, pass) {
+      if (user === "admin" && pass === "hanzyy123") {
+        playSuccess();
+        alert("Login sukses!");
       } else {
-        alert("Password lama salah!");
+        playError();
+        alert("Login gagal!");
       }
     }
 
-    window.onload = () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.display = "none";
-        document.getElementById('mainContent').style.display = "block";
-        document.getElementById('adminPanelBtn').style.display = "inline-block";
-        displayProducts();
-        saveCart();
-        const ua = navigator.userAgent;
-        const b = ua.includes("Chrome") ? "Chrome" : ua.includes("Firefox") ? "Firefox" : "Browser";
-        document.getElementById("greetingText").textContent = `Halo, pengguna ${b}! Selamat datang di Hanzyy Produk`;
-      }, 1000);
+    window.addEventListener("DOMContentLoaded", () => {
+      typeEffect();
+      document.getElementById("startSound").volume = 0.5;
+      document.getElementById("startSound").play().catch(() => {});
+    });
+
+    // Simulasi checkout
+    function checkout() {
+      playSuccess();
+      alert("Checkout berhasil!");
     }
   </script>
 </body>
